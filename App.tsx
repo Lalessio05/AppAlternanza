@@ -5,8 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // import screens
-import LoginScreen from "./screens/LoginScreen";
-import MainScreen from "./screens/MainScreen";
+import LoginScreen from "./cose/screens/LoginScreen";
+import MainScreen from "./cose/screens/MainScreen";
 
 
 // create a "stack"

@@ -1,1 +1,0 @@
-https://blog.logrocket.com/how-to-access-file-systems-react-native/

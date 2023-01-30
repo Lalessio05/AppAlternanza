@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 export default class Socket {
   socket: WebSocket;
   constructor(indirizzo: string) {
@@ -6,24 +7,39 @@ export default class Socket {
       console.log('Mi sono connesso');
     };
   }
-
+  Disconnetti() {
+    this.socket.close();
+  }
   Manda(nomeEvento: string, messaggio: any) {
-    this.socket.send(
-      JSON.stringify({
-        nomeEvento: nomeEvento,
-        username: messaggio.username,
-        password: messaggio.password,
-      }),
-    );
+    try {
+      this.socket.send(
+        JSON.stringify({
+          nomeEvento: nomeEvento,
+          username: messaggio.username,
+          password: messaggio.password,
+          codice: messaggio.codice,
+        }),
+      );
+    } catch {
+      Alert.alert('Connessione al server problematica');
+    }
   }
 
-  Ricevi(nomeEvento: string) {
-    this.socket.onmessage = e => {
-      let messaggio = e.data.split(':');
-      if (messaggio[0] == nomeEvento) {
-        console.log(messaggio[1]);
-        //ritornalo
-      }
-    };
+  Ricevi(nomeEvento: string, callback: (risposta: any) => void): any {
+    try {
+      this.socket.onmessage = e => {
+        let risposta = JSON.parse(e.data);
+        console.log(risposta)
+        if (nomeEvento === 'OnSubmitResponse') {
+          if (risposta.nomeEvento === nomeEvento)
+            callback(risposta.messaggio);
+        } else if (nomeEvento === 'OnAutoLoginResponse')
+          if (risposta.nomeEvento === nomeEvento /* */)
+            callback(risposta.messaggio);
+      };
+    } catch {
+      Alert.alert('Connessione al server problematica');
+    }
+    console.log("Ciao gianni")
   }
 }

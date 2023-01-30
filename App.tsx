@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import screens
 import LoginScreen from "./cose/screens/LoginScreen";
 import MainScreen from "./cose/screens/MainScreen";
-
+import HomeScreen from "./cose/screens/HomeScreen";
 
 // create a "stack"
 const MyStack = createNativeStackNavigator();
@@ -16,6 +16,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <MyStack.Navigator>
+        <MyStack.Screen name="Home" component={HomeScreen} initialParams={{chiave: null}}/>
         <MyStack.Screen name="Log-in" component={LoginScreen} />
         <MyStack.Screen name="Main" component={MainScreen} />
         </MyStack.Navigator>

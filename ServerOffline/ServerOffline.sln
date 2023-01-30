@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33312.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerOffline", "ServerOffline\ServerOffline.csproj", "{91983D6C-43AB-4FE7-B3CA-8C7788FFA0AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91983D6C-43AB-4FE7-B3CA-8C7788FFA0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91983D6C-43AB-4FE7-B3CA-8C7788FFA0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91983D6C-43AB-4FE7-B3CA-8C7788FFA0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91983D6C-43AB-4FE7-B3CA-8C7788FFA0AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C5E0879-071D-4D11-B3B0-DA4A4D9887E6}
+	EndGlobalSection
+EndGlobal

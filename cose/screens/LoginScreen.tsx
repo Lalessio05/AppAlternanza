@@ -1,26 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {View, Button, StyleSheet, TextInput, Text} from 'react-native';
+import {View, Button, StyleSheet, TextInput, Text, Alert} from 'react-native';
 import Socket from '../classi/Socket';
 import SalvataggioDati from '../classi/SalvataggioDati';
+
 function LoginScreen({navigation}: any) {
   const [username, SetUsername] = useState('');
   const [password, SetPassword] = useState('');
-  const [chiave, setChiave] = useState(new ArrayBuffer(512));
-  const [socket, setSocket] = useState<Socket | null>(
-    new Socket('ws://192.168.1.239:3000'),
-  ); //
-  // useEffect(() => {
-  //   if (!socket) {
-  //     const newSocket = new Socket();
-  //     newSocket.SetSocket('http://192.168.1.239:3000');
-  //     setSocket(newSocket);
-  //   }
-  //   async function fetchData() {
-  //     const data = await SalvataggioDati.getData();
-  //     setChiave(data);
-  //   }
-  //   fetchData();
-  // }, []);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  useEffect(() => {
+    if (socket=== null)
+      setSocket(new Socket('ws://192.168.1.239:3000'));
+  }, []);
 
   return (
     <View style={styles.screen}>
@@ -42,39 +32,18 @@ function LoginScreen({navigation}: any) {
         color={'red'}
         title={'Submit'}
         onPress={() => {
-          if (socket !== null) {
-            // socket.Manda('OnSubmit', {
-            //   username: username,
-            //   password: password,
-            // });
-            socket.Manda('OnSubmit', {username: username, password: password});
-
-            // socket.Ricevi('OnSubmitResponse', (messaggio: any) => {
-            //   if (messaggio) {
-            //     navigation.navigate('Main');
-            //     setChiave(messaggio);
-            //     SalvataggioDati.storeData(chiave);
-            //   }
-            // });
-            socket.Ricevi('OnSubmitResponse');
-          }
-        }}
-      />
-      <Button
-        color={'blue'}
-        title={'Sono già loggato'}
-        onPress={() => {
-          if (socket !== null) {
-            socket.Manda(
-              'OnAutoLogin',
-              "Questo è il messaggio dell'evento Pinuccio",
-            );
-            //   socket.Ricevi('OnAutoLoginResponse', (messaggio: any) => {
-            //     if (messaggio) navigation.navigate('Main');
-            //   });
-            // }
-            socket.Ricevi('OnAutoLoginResponse');
-          }
+          socket?.Manda('OnSubmit', {username: username, password: password});
+          socket?.Ricevi('OnSubmitResponse', chiave => {
+            console.log("Ciao gianni!")
+            if (chiave) {
+              navigation.navigate({
+                name: 'Home',
+                params: {chiave: chiave,data:new Date().toDateString()},
+                merge: true,
+              });
+              socket.Disconnetti();
+            } else Alert.alert('Username e/o password sbagliati');
+          });
         }}
       />
     </View>

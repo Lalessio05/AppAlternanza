@@ -1,10 +1,7 @@
 ﻿using Server;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace ServerOffline
 {
@@ -14,8 +11,13 @@ namespace ServerOffline
         {
             string chiavePrivataCriptazione = System.IO.File.ReadAllText(@"C:\Users\Andrea\Desktop\d\privata.txt");
             SocketServer socketServer = new SocketServer("ws://0.0.0.0:4500");
-            socketServer.Start(chiavePrivataCriptazione: chiavePrivataCriptazione);
+            Form1 form = new Form1();
+            
+            socketServer.Start(chiavePrivataCriptazione: chiavePrivataCriptazione, finestra: form);
+            form.ShowDialog();
             Console.Read();
+
+            
         }
     }
 }

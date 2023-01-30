@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, Button, StyleSheet, TextInput, Text, Alert} from 'react-native';
 import Socket from '../classi/Socket';
-import SalvataggioDati from '../classi/SalvataggioDati';
 
 function LoginScreen({navigation}: any) {
   const [username, SetUsername] = useState('');
@@ -33,8 +32,14 @@ function LoginScreen({navigation}: any) {
         title={'Submit'}
         onPress={() => {
           socket?.Manda('OnSubmit', {username: username, password: password});
+          setTimeout(() => {
+            if (!risposto) {
+              Alert.alert('Il server non risponde');
+            }
+          }, 5000); 
+          let risposto = false;
           socket?.Ricevi('OnSubmitResponse', chiave => {
-            console.log("Ciao gianni!")
+            risposto = true
             if (chiave) {
               navigation.navigate({
                 name: 'Home',

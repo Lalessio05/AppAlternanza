@@ -1,5 +1,6 @@
 ﻿using Fleck;
 using Newtonsoft.Json;
+using ServerOffline;
 using System;
 
 namespace Server
@@ -17,7 +18,7 @@ namespace Server
         {
             return "An user connected to your channel";
         }
-        public void Start(dynamic db = null /*Funziona con la mia classe database*/,  string chiavePubblicaCriptazione = null, string chiavePrivataCriptazione = null)
+        public void Start(dynamic db = null /*Funziona con la mia classe database*/,  string chiavePubblicaCriptazione = null, string chiavePrivataCriptazione = null,dynamic finestra = null)
         {
             server.Start((s) =>
             {
@@ -41,6 +42,9 @@ namespace Server
                             break;
                         case "OnAutoLogin":
                                 s.Send(MessageHandler.HandleOnAutoLogin(messaggioRicevuto,chiavePrivataCriptazione));
+                            break;
+                        case "OnMove":
+                                MessageHandler.HandleMove(messaggioRicevuto,chiavePrivataCriptazione, finestra); 
                             break;
                         default:
                             break;

@@ -18,10 +18,11 @@ export default class Socket {
           username: messaggio.username,
           password: messaggio.password,
           codice: messaggio.codice,
+          movimento:messaggio.movimento,
         }),
       );
-    } catch {
-      Alert.alert('Connessione al server problematica');
+    } catch (e){
+      console.log(e);
     }
   }
 
@@ -29,7 +30,6 @@ export default class Socket {
     try {
       this.socket.onmessage = e => {
         let risposta = JSON.parse(e.data);
-        console.log(risposta)
         if (nomeEvento === 'OnSubmitResponse') {
           if (risposta.nomeEvento === nomeEvento)
             callback(risposta.messaggio);
@@ -37,9 +37,9 @@ export default class Socket {
           if (risposta.nomeEvento === nomeEvento /* */)
             callback(risposta.messaggio);
       };
-    } catch {
-      Alert.alert('Connessione al server problematica');
+    } catch (e) {
+      console.log(e);
     }
-    console.log("Ciao gianni")
+
   }
 }

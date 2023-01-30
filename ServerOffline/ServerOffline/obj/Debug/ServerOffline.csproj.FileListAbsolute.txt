@@ -10,3 +10,5 @@ C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj
 C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Debug\ServerOffline.csproj.CopyComplete
 C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Debug\ServerOffline.exe
 C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Debug\ServerOffline.pdb
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Debug\ServerOffline.Form1.resources
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Debug\ServerOffline.csproj.GenerateResource.cache

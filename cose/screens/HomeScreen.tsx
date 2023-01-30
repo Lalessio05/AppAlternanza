@@ -1,19 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import Socket from '../classi/Socket';
 import {Alert, Button, Text, View} from 'react-native';
+import SalvataggioDati from '../classi/SalvataggioDati';
 
 export default function HomeScreen({navigation, route}: any) {
   const [chiave, setChiave] = useState(null);
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [lastTockenDate, setLastTokenDate] = useState<string>("");
+  const [lastTockenDate, setLastTokenDate] = useState<string>('');
   useEffect(() => {
-    if (socket === null){
-      setSocket(new Socket('ws://192.168.1.239:4500'))
+    if (socket === null) {
+      setSocket(new Socket('ws://192.168.1.239:4500'));
     }
     if (route.params?.chiave) {
       setChiave(route.params.chiave);
       setLastTokenDate(route.params.data);
+      SalvataggioDati.storeData(chiave);
     }
+
+    async function fetchData() {
+      const data = await SalvataggioDati.getData();
+      setChiave(data);
+    }
+    fetchData();
   }, [route.params?.chiave]);
 
   return (
@@ -28,8 +36,22 @@ export default function HomeScreen({navigation, route}: any) {
         title="Credo di avere già un token"
         onPress={() => {
           socket?.Manda('OnAutoLogin', {codice: chiave});
+          let risposto = false;
+
+          setTimeout(() => {
+            if (!risposto) {
+              Alert.alert('Il server non risponde');
+            }
+          }, 5000);
+
           socket?.Ricevi('OnAutoLoginResponse', risposta => {
-            if (risposta) navigation.navigate('Main');
+            risposto = true;
+            if (risposta)
+              navigation.navigate({
+                name: 'Main',
+                params: {chiave: chiave},
+                merge: true,
+              });
             else Alert.alert('Il token non è valido');
           });
         }}

@@ -7,8 +7,7 @@ function LoginScreen({navigation}: any) {
   const [password, SetPassword] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
   useEffect(() => {
-    if (socket=== null)
-      setSocket(new Socket('ws://192.168.1.239:3000'));
+    if (socket === null) setSocket(new Socket('ws://192.168.1.239:3000'));
   }, []);
 
   return (
@@ -36,14 +35,14 @@ function LoginScreen({navigation}: any) {
             if (!risposto) {
               Alert.alert('Il server non risponde');
             }
-          }, 5000); 
+          }, 5000);
           let risposto = false;
           socket?.Ricevi('OnSubmitResponse', chiave => {
-            risposto = true
+            risposto = true;
             if (chiave) {
               navigation.navigate({
                 name: 'Home',
-                params: {chiave: chiave,data:new Date().toDateString()},
+                params: {chiave: chiave, data: new Date().toDateString()},
                 merge: true,
               });
               socket.Disconnetti();

@@ -7,23 +7,30 @@ export default function HomeScreen({navigation, route}: any) {
   const [chiave, setChiave] = useState(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [lastTockenDate, setLastTokenDate] = useState<string>('');
+  async function fetchData() {
+    setChiave(await SalvataggioDati.getData("@Key"));
+    setLastTokenDate(await SalvataggioDati.getData("@Date"));
+  }
   useEffect(() => {
     if (socket === null) {
       setSocket(new Socket('ws://192.168.1.239:4500'));
     }
     if (route.params?.chiave) {
-      setChiave(route.params.chiave);
+      setChiave(route.params?.chiave);
       setLastTokenDate(route.params.data);
-      SalvataggioDati.storeData(chiave);
-    }
 
-    async function fetchData() {
-      const data = await SalvataggioDati.getData();
-      setChiave(data);
+      SalvataggioDati.storeData(chiave,"@Key");
+      SalvataggioDati.storeData(lastTockenDate,"@Date")
     }
-    fetchData();
   }, [route.params?.chiave]);
-
+  useEffect(() => {
+    async function fetchData() {
+      setChiave(await SalvataggioDati.getData("@Key"));
+      setLastTokenDate(await SalvataggioDati.getData("@Date"));
+    }
+    if (chiave === null) fetchData();
+    console.log(chiave)
+  },[]);
   return (
     <View>
       <Button
@@ -57,6 +64,7 @@ export default function HomeScreen({navigation, route}: any) {
         }}
       />
       <Text>Ultimo token ricevuto: {lastTockenDate}</Text>
+      <Button title="Prova" onPress={()=>SalvataggioDati.storeData(chiave,"@Key")}/><Button title="Prova2" onPress={()=>fetchData()} />
     </View>
   );
 }
@@ -67,5 +75,7 @@ export default function HomeScreen({navigation, route}: any) {
       setChiave(data);
     }
     fetchData();
+     
+    Bisogna Salvare anche la data
       */
 }

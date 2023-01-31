@@ -16,7 +16,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <MyStack.Navigator>
-        <MyStack.Screen name="Home" component={HomeScreen} initialParams={{chiave: null}}/>
+        <MyStack.Screen name="Home" component={HomeScreen} />
         <MyStack.Screen name="Log-in" component={LoginScreen} />
         <MyStack.Screen name="Main" component={MainScreen} />
         </MyStack.Navigator>

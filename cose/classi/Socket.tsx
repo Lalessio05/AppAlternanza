@@ -1,4 +1,3 @@
-import {Alert} from 'react-native';
 export default class Socket {
   socket: WebSocket;
   constructor(indirizzo: string) {
@@ -7,9 +6,11 @@ export default class Socket {
       console.log('Mi sono connesso');
     };
   }
+
   Disconnetti() {
     this.socket.close();
   }
+
   Manda(nomeEvento: string, messaggio: any) {
     try {
       this.socket.send(
@@ -18,28 +19,25 @@ export default class Socket {
           username: messaggio.username,
           password: messaggio.password,
           codice: messaggio.codice,
-          movimento:messaggio.movimento,
+          movimento: messaggio.movimento,
         }),
       );
-    } catch (e){
+    } catch (e) {
       console.log(e);
     }
   }
 
   Ricevi(nomeEvento: string, callback: (risposta: any) => void): any {
-    try {
-      this.socket.onmessage = e => {
+    this.socket.onmessage = e => {
+      try {
         let risposta = JSON.parse(e.data);
-        if (nomeEvento === 'OnSubmitResponse') {
-          if (risposta.nomeEvento === nomeEvento)
-            callback(risposta.messaggio);
-        } else if (nomeEvento === 'OnAutoLoginResponse')
-          if (risposta.nomeEvento === nomeEvento /* */)
-            callback(risposta.messaggio);
-      };
-    } catch (e) {
-      console.log(e);
-    }
-
+        if (risposta.nomeEvento === nomeEvento ) {  //Forse dovrei fare una lista di eventi e controllare se l'evento è presente nella lista 
+          callback(risposta.messaggio);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
   }
+
 }

@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ServerOffline;
 using System;
-using System.Drawing.Drawing2D;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace Server
@@ -45,10 +43,11 @@ namespace Server
                 messaggio = false
             });
         }
-        public static void HandleMove(Messaggio messaggioRicevuto, dynamic chiavePrivataCriptazione, Form1 finestra)
+        public static string HandleMove(Messaggio messaggioRicevuto, dynamic chiavePrivataCriptazione, Form1 finestra)
         {
             var coordinata = (0, 0);
             if (messaggioRicevuto.codice != null && VerificaCodice(messaggioRicevuto, chiavePrivataCriptazione))
+            {
                 switch (messaggioRicevuto.movimento)
                 {
                     case "Su":
@@ -65,13 +64,32 @@ namespace Server
                         break;
                     default:
                         throw new Exception("Invalid command");
-                        
+
                 }
-            finestra.Invoke(new MethodInvoker(delegate () { finestra.Muovi(coordinata); }));
-            //Invoca qui
+                finestra.Invoke(new MethodInvoker(delegate () { finestra.Muovi(coordinata); }));
+                return JsonConvert.SerializeObject(new
+                {
+                    nomeEvento = "OnMoveResponse",
+                    messaggio = true
+                });
+            }
+            return JsonConvert.SerializeObject(new
+            {
+                nomeEvento = "OnMoveResponse",
+                messaggio = false
+            });
+        }
+        public static string Test()
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                nomeEvento = "OnAutoLoginResponse",
+                messaggio = true
+            });
         }
         public static bool VerificaCodice(Messaggio messaggioRicevuto, dynamic chiavePrivataCriptazione)
         {
+            Console.WriteLine(DateTime.Parse(Crypt.RSADecrypt(chiavePrivataCriptazione, messaggioRicevuto.codice)));
             return (DateTime.Now - DateTime.Parse(Crypt.RSADecrypt(chiavePrivataCriptazione, messaggioRicevuto.codice))).TotalDays < 1;
         }
     }

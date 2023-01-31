@@ -1,7 +1,5 @@
 ﻿using Server;
 using System;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace ServerOffline
 {

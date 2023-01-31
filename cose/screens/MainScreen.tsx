@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, Button, StyleSheet} from 'react-native';
+import {View, Button, StyleSheet, Alert} from 'react-native';
 import Socket from '../classi/Socket';
-
 
 export default function MainScreen({navigation, route}: any) {
   const [chiave, setChiave] = useState('');
@@ -18,7 +17,18 @@ export default function MainScreen({navigation, route}: any) {
         color={'green'}
         onPress={() => {
           socket?.Manda('OnMove', {codice: chiave, movimento: 'Sinistra'});
-          console.log("Sinistra")
+          let risposto = false;
+
+          setTimeout(() => {
+            if (!risposto) {
+              Alert.alert('Il server non risponde');
+            }
+          }, 5000);
+
+          socket?.Ricevi('OnMoveResponse', risposta => {
+            risposto = true;
+            if (!risposta) Alert.alert('Il token non è valido');
+          });
         }}
       />
       <View style={styles.buttonContainer}>
@@ -27,7 +37,18 @@ export default function MainScreen({navigation, route}: any) {
           color={'green'}
           onPress={() => {
             socket?.Manda('OnMove', {codice: chiave, movimento: 'Su'});
-            console.log("Su")
+            let risposto = false;
+
+            setTimeout(() => {
+              if (!risposto) {
+                Alert.alert('Il server non risponde');
+              }
+            }, 5000);
+
+            socket?.Ricevi('OnMoveResponse', risposta => {
+              risposto = true;
+              if (!risposta) Alert.alert('Il token non è valido');
+            });
           }}
         />
         <Button
@@ -35,7 +56,18 @@ export default function MainScreen({navigation, route}: any) {
           color={'green'}
           onPress={() => {
             socket?.Manda('OnMove', {codice: chiave, movimento: 'Giù'});
-            console.log("Giù")
+            let risposto = false;
+
+            setTimeout(() => {
+              if (!risposto) {
+                Alert.alert('Il server non risponde');
+              }
+            }, 5000);
+
+            socket?.Ricevi('OnMoveResponse', risposta => {
+              risposto = true;
+              if (!risposta) Alert.alert('Il token non è valido');
+            });
           }}
         />
       </View>
@@ -44,12 +76,22 @@ export default function MainScreen({navigation, route}: any) {
         color={'green'}
         onPress={() => {
           socket?.Manda('OnMove', {codice: chiave, movimento: 'Destra'});
-          console.log("Destra")
+          let risposto = false;
+
+          setTimeout(() => {
+            if (!risposto) {
+              Alert.alert('Il server non risponde');
+            }
+          }, 5000);
+
+          socket?.Ricevi('OnMoveResponse', risposta => {
+            risposto = true;
+            if (!risposta) Alert.alert('Il token non è valido');
+          });
         }}
       />
     </View>
   );
-  
 }
 const styles = StyleSheet.create({
   container: {
@@ -66,8 +108,8 @@ const styles = StyleSheet.create({
   },
 });
 
-
 //Aggiungiamo dei bottoni con vari opzioni, timeout, casistiche particolari (), ogni comando coi bottoni deve essere verificato.
 //Cercare di fare l'apk, verificare che si salvi il tutto.
 //Server offline, quando ricevo qualcosa fai vedere qualcosa
 //Fai un omino nel server che va in giro con le frecce, tipo gli indiani
+//Forse è meglio fare una classe con la funzione che controlla che il server risponda e abbia mandato risposta positiva

@@ -3,6 +3,7 @@ export default class {
   static storeData = async (item: any, chiave:string) => {
     const jsonValue = JSON.stringify(item);
     await AsyncStorage.setItem(chiave, jsonValue);
+    console.log("Sto storando")
   };
   static getData = async (chiave:string) => {
     const jsonValue = await AsyncStorage.getItem(chiave);

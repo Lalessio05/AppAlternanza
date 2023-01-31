@@ -22,12 +22,8 @@ export default function HomeScreen({navigation, route}: any) {
       SalvataggioDati.storeData(chiave,"@Key");
       SalvataggioDati.storeData(lastTockenDate,"@Date")
     }
-  }, [route.params?.chiave]);
+  }, [route.params?.chiave,chiave]);
   useEffect(() => {
-    async function fetchData() {
-      setChiave(await SalvataggioDati.getData("@Key"));
-      setLastTokenDate(await SalvataggioDati.getData("@Date"));
-    }
     if (chiave === null) fetchData();
     console.log(chiave)
   },[]);
@@ -64,7 +60,8 @@ export default function HomeScreen({navigation, route}: any) {
         }}
       />
       <Text>Ultimo token ricevuto: {lastTockenDate}</Text>
-      <Button title="Prova" onPress={()=>SalvataggioDati.storeData(chiave,"@Key")}/><Button title="Prova2" onPress={()=>fetchData()} />
+      <Button title="Save" onPress={()=>{SalvataggioDati.storeData(chiave,"@Key");SalvataggioDati.storeData(lastTockenDate,"@Date")}}/>
+      <Button title="Load" onPress={()=>fetchData()} />
     </View>
   );
 }

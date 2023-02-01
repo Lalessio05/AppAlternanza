@@ -1,0 +1,14 @@
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\bin\Release\ServerOffline.exe.config
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\bin\Release\ServerOffline.exe
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\bin\Release\ServerOffline.pdb
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\bin\Release\Fleck.dll
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\bin\Release\Newtonsoft.Json.dll
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\bin\Release\Newtonsoft.Json.xml
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.csproj.AssemblyReference.cache
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.csproj.SuggestedBindingRedirects.cache
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.Form1.resources
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.csproj.GenerateResource.cache
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.csproj.CoreCompileInputs.cache
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.csproj.CopyComplete
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.exe
+C:\Users\Andrea\Desktop\AppAlternanza\AppAlessio\ServerOffline\ServerOffline\obj\Release\ServerOffline.pdb

@@ -60,8 +60,6 @@ export default function HomeScreen({navigation, route}: any) {
         }}
       />
       <Text>Ultimo token ricevuto: {lastTockenDate}</Text>
-      <Button title="Save" onPress={()=>{SalvataggioDati.storeData(chiave,"@Key");SalvataggioDati.storeData(lastTockenDate,"@Date")}}/>
-      <Button title="Load" onPress={()=>fetchData()} />
     </View>
   );
 }

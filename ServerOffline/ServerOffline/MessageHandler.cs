@@ -51,16 +51,17 @@ namespace Server
                 switch (messaggioRicevuto.movimento)
                 {
                     case "Su":
-                        coordinata = (0, 10);
-                        break;
-                    case "Giù":
                         coordinata = (0, -10);
                         break;
+                    case "Giù":
+                        coordinata = (0, 10);
+                        
+                        break;
                     case "Destra":
-                        coordinata = (-10, 0);
+                        coordinata = (10, 0);
                         break;
                     case "Sinistra":
-                        coordinata = (10, 0);
+                        coordinata = (-10, 0);
                         break;
                     default:
                         throw new Exception("Invalid command");

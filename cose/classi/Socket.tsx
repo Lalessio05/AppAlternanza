@@ -12,6 +12,7 @@ export default class Socket {
   }
 
   Manda(nomeEvento: string, messaggio: any) {
+    
     try {
       this.socket.send(
         JSON.stringify({

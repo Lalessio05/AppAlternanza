@@ -9,7 +9,7 @@ namespace ServerOffline
         {
             string chiavePrivataCriptazione = System.IO.File.ReadAllText(@"C:\Users\Andrea\Desktop\d\privata.txt");
             SocketServer socketServer = new SocketServer("ws://0.0.0.0:4500");
-            Form1 form = new Form1();
+            Form1 form = new Form1(1920,1080);
             
             socketServer.Start(chiavePrivataCriptazione: chiavePrivataCriptazione, finestra: form);
             form.ShowDialog();

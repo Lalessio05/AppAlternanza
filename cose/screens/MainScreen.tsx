@@ -1,17 +1,12 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Alert,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, Alert, Text, TouchableOpacity} from 'react-native';
 import Socket from '../classi/Socket';
 
 export default function MainScreen({navigation, route}: any) {
   const [chiave, setChiave] = useState('');
   const [socket, setSocket] = useState<null | Socket>(null);
   const intervalId = useRef<null | number>(null);
+
   function HandleOnPressIn(direzione: string) {
     let risposto = false;
     intervalId.current = setInterval(() => {
@@ -23,10 +18,9 @@ export default function MainScreen({navigation, route}: any) {
         }
       }, 5000);
 
-      socket?.Ricevi('OnMoveResponse', (risposta) => {
+      socket?.Ricevi('OnMoveResponse', risposta => {
         risposto = true;
-        if (!risposta)
-          Alert.alert("Chiave scaduta");
+        if (!risposta) Alert.alert('Chiave scaduta');
       });
     }, 200);
   }
@@ -34,9 +28,6 @@ export default function MainScreen({navigation, route}: any) {
     setSocket(new Socket('ws://192.168.1.239:4500'));
     setChiave(route.params?.chiave);
   }, []);
-  useEffect(()=>{
-    socket?.Manda("OnMove",{Su: su, Giù: giù, Destra:destra, Sinistra: sinistra});
-  })
 
   return (
     <View style={styles.container}>
@@ -46,6 +37,21 @@ export default function MainScreen({navigation, route}: any) {
         }}
         onPressOut={() => {
           if (intervalId.current !== null) clearInterval(intervalId.current);
+        }}
+        onPress={() => {
+          let risposto: any;
+          socket?.Manda('OnMove', {codice: chiave, movimento: 'Sinistra'});
+          setTimeout(() => {
+            if (!risposto) {
+              Alert.alert('Il server non risponde');
+              return;
+            }
+          }, 5000);
+
+          socket?.Ricevi('OnMoveResponse', risposta => {
+            risposto = true;
+            if (!risposta) Alert.alert('Chiave scaduta');
+          });
         }}>
         <Text style={{color: 'red', fontSize: 30}}> Sinistra</Text>
       </TouchableOpacity>
@@ -57,6 +63,21 @@ export default function MainScreen({navigation, route}: any) {
           }}
           onPressOut={() => {
             if (intervalId.current !== null) clearInterval(intervalId.current);
+          }}
+          onPress={() => {
+            let risposto: any;
+            socket?.Manda('OnMove', {codice: chiave, movimento: 'Su'});
+            setTimeout(() => {
+              if (!risposto) {
+                Alert.alert('Il server non risponde');
+                return;
+              }
+            }, 5000);
+  
+            socket?.Ricevi('OnMoveResponse', risposta => {
+              risposto = true;
+              if (!risposta) Alert.alert('Chiave scaduta');
+            });
           }}>
           <Text style={{color: 'red', fontSize: 30}}> Su</Text>
         </TouchableOpacity>
@@ -66,7 +87,23 @@ export default function MainScreen({navigation, route}: any) {
           }}
           onPressOut={() => {
             if (intervalId.current !== null) clearInterval(intervalId.current);
-          }}>
+          }}
+          onPress={() => {
+            let risposto: any;
+            socket?.Manda('OnMove', {codice: chiave, movimento: 'Giù'});
+            setTimeout(() => {
+              if (!risposto) {
+                Alert.alert('Il server non risponde');
+                return;
+              }
+            }, 5000);
+  
+            socket?.Ricevi('OnMoveResponse', risposta => {
+              risposto = true;
+              if (!risposta) Alert.alert('Chiave scaduta');
+            });
+          }}
+          >
           <Text style={{color: 'red', fontSize: 30}}> Giù</Text>
         </TouchableOpacity>
       </View>
@@ -76,6 +113,21 @@ export default function MainScreen({navigation, route}: any) {
         }}
         onPressOut={() => {
           if (intervalId.current !== null) clearInterval(intervalId.current);
+        }}
+        onPress={() => {
+          let risposto: any;
+          socket?.Manda('OnMove', {codice: chiave, movimento: 'Destra'});
+          setTimeout(() => {
+            if (!risposto) {
+              Alert.alert('Il server non risponde');
+              return;
+            }
+          }, 5000);
+
+          socket?.Ricevi('OnMoveResponse', risposta => {
+            risposto = true;
+            if (!risposta) Alert.alert('Chiave scaduta');
+          });
         }}>
         <Text style={{color: 'red', fontSize: 30}}> Destra</Text>
       </TouchableOpacity>

@@ -31,7 +31,7 @@ namespace Server
         }
         public static string HandleOnAutoLogin(Messaggio messaggioRicevuto, dynamic chiavePrivataCriptazione)
         {
-            if (messaggioRicevuto.codice != null && VerificaCodice(messaggioRicevuto,chiavePrivataCriptazione))
+            if (messaggioRicevuto.codice != null && VerificaCodice(messaggioRicevuto, chiavePrivataCriptazione))
                 return JsonConvert.SerializeObject(new
                 {
                     nomeEvento = "OnAutoLoginResponse",
@@ -55,7 +55,7 @@ namespace Server
                         break;
                     case "Giù":
                         coordinata = (0, 10);
-                        
+
                         break;
                     case "Destra":
                         coordinata = (10, 0);
@@ -95,4 +95,3 @@ namespace Server
         }
     }
 }
-

@@ -92,7 +92,9 @@ namespace ServerOffline
         public void Muovi((int, int) coordinata)
         {
             var prevLocation = label1.Location;
+
             label1.Location = new Point(label1.Location.X + coordinata.Item1, label1.Location.Y + coordinata.Item2);
+            
             if (label1.Location.X >= Dimensioni.Width)
             {
                 label1.Location = new Point(Dimensioni.Width, label1.Location.Y);
@@ -109,7 +111,7 @@ namespace ServerOffline
             {
                 label1.Location = new Point(label1.Location.X, 0);
             }
-            if (arr[label1.Location.X, label1.Location.Y])
+            if (arr[label1.Location.X/10, label1.Location.Y/10])
                 label1.Location = prevLocation;
 
         }

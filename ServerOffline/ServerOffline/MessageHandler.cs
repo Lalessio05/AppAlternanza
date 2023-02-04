@@ -7,7 +7,9 @@ namespace Server
 {
     internal static class MessageHandler
     {
-        public static string HandleOnSubmit(Messaggio messaggioRicevuto, dynamic db, dynamic chiavePubblicaCriptazione)
+        static string chiavePrecendente;
+
+        public static string HandleOnSubmit(Messaggio messaggioRicevuto, dynamic db /*Funziona con la mia classe database*/, string chiavePubblicaCriptazione)
         {
             if (db == null)
             {
@@ -29,7 +31,7 @@ namespace Server
             }
                 );
         }
-        public static string HandleOnAutoLogin(Messaggio messaggioRicevuto, dynamic chiavePrivataCriptazione)
+        public static string HandleOnAutoLogin(Messaggio messaggioRicevuto, string chiavePrivataCriptazione)
         {
             if (messaggioRicevuto.codice != null && VerificaCodice(messaggioRicevuto, chiavePrivataCriptazione))
                 return JsonConvert.SerializeObject(new
@@ -43,7 +45,7 @@ namespace Server
                 messaggio = false
             });
         }
-        public static string HandleMove(Messaggio messaggioRicevuto, dynamic chiavePrivataCriptazione, Form1 finestra)
+        public static string HandleMove(Messaggio messaggioRicevuto, string chiavePrivataCriptazione, Finestra finestra)
         {
             var coordinata = (0, 0);
             if (messaggioRicevuto.codice != null && VerificaCodice(messaggioRicevuto, chiavePrivataCriptazione))
@@ -67,7 +69,7 @@ namespace Server
                         throw new Exception("Invalid command");
 
                 }
-                finestra.Invoke(new MethodInvoker(delegate () { finestra.Muovi(coordinata); }));
+                finestra.Invoke(new MethodInvoker(()=>{ finestra.Muovi(coordinata.Item1,coordinata.Item2); }));
                 return JsonConvert.SerializeObject(new
                 {
                     nomeEvento = "OnMoveResponse",
@@ -80,17 +82,12 @@ namespace Server
                 messaggio = false
             });
         }
-        public static string Test()
+
+        public static bool VerificaCodice(Messaggio messaggioRicevuto, string chiavePrivataCriptazione)
         {
-            return JsonConvert.SerializeObject(new
-            {
-                nomeEvento = "OnAutoLoginResponse",
-                messaggio = true
-            });
-        }
-        public static bool VerificaCodice(Messaggio messaggioRicevuto, dynamic chiavePrivataCriptazione)
-        {
-            Console.WriteLine(DateTime.Parse(Crypt.RSADecrypt(chiavePrivataCriptazione, messaggioRicevuto.codice)));
+            if (chiavePrecendente == chiavePrivataCriptazione)
+                return true;
+            chiavePrecendente = chiavePrivataCriptazione;     
             return (DateTime.Now - DateTime.Parse(Crypt.RSADecrypt(chiavePrivataCriptazione, messaggioRicevuto.codice))).TotalDays < 1;
         }
     }

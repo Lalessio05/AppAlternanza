@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 
 namespace Server
 {
@@ -17,7 +18,7 @@ namespace Server
             var bytesDaCriptare = System.Text.Encoding.Unicode.GetBytes(robaDaCriptare);
             return csp.Encrypt(bytesDaCriptare, false);
         }
-        static public string RSADecrypt(string chiavePrivataStringa, byte[] robaDaDecriptare)
+        static public string RSADecrypt(string chiavePrivataStringa, string robaDaDecriptare)
         {
             RSAParameters privata;
             {
@@ -27,7 +28,7 @@ namespace Server
             }
             var csp = new RSACryptoServiceProvider();
             csp.ImportParameters(privata);
-            var bytesPlainTextData = csp.Decrypt(robaDaDecriptare, false);
+            var bytesPlainTextData = csp.Decrypt(Convert.FromBase64String(robaDaDecriptare), false);
             return System.Text.Encoding.Unicode.GetString(bytesPlainTextData);
         }
     }

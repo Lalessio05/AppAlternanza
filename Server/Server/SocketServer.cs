@@ -1,5 +1,6 @@
 ﻿using Fleck;
 using Newtonsoft.Json;
+using Server;
 using System;
 
 namespace Server
@@ -7,17 +8,17 @@ namespace Server
     internal class SocketServer
     {
         WebSocketServer server;
-        public SocketServer(string indirizzo) 
+        public SocketServer(string indirizzo)
         {
             FleckLog.Level = LogLevel.Debug;
             server = new WebSocketServer(indirizzo);
-            
+
         }
         public string DefaultOnOpen()
         {
             return "An user connected to your channel";
         }
-        public void Start(Server.Database db = null, string chiavePubblicaCriptazione = null)
+        public void Start(dynamic db = null /*Funziona con la mia classe database*/, string chiavePubblicaCriptazione = null, string chiavePrivataCriptazione = null, dynamic finestra = null)
         {
             server.Start((s) =>
             {
@@ -33,25 +34,33 @@ namespace Server
                 {
 
                     Messaggio messaggioRicevuto = ReceiveJson(s, message);
+
                     switch (messaggioRicevuto.nomeEvento)
                     {
                         case "OnSubmit":
-                            var risposta = MessageHandler.HandleOnSubmit(messaggioRicevuto, db, chiavePubblicaCriptazione);
-                            s.Send(risposta);
+                            s.Send(MessageHandler.HandleOnSubmit(messaggioRicevuto, db, chiavePubblicaCriptazione));
+                            break;
+                        case "OnAutoLogin":
+
+                            s.Send(MessageHandler.HandleOnAutoLogin(messaggioRicevuto, chiavePrivataCriptazione));
+                            //s.Send(MessageHandler.Test());
+                            break;
+                        case "OnMove":
+                            s.Send(MessageHandler.HandleMove(messaggioRicevuto, chiavePrivataCriptazione, finestra));
                             break;
                         default:
                             break;
                     }
                 };
             });
-            
+
         }
 
         public string DefaultOnClose()
         {
-            return "A user disconnected";
+            return "A user disconnected from your channel";
         }
-        public Messaggio ReceiveJson(IWebSocketConnection s, string message)    
+        public Messaggio ReceiveJson(IWebSocketConnection s, string message)
         {
             return JsonConvert.DeserializeObject<Messaggio>(message);
         }

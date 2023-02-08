@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ServerOffline;
+using System;
+using System.Data;
 using System.Data.SQLite;
 
 namespace Server
 {
-    //Diventa una interfaccia chiamata tipo datastorage ed estenderla
-    internal class Database
+    internal class Database : IDataStorage
     {
-        SQLiteConnection connection;
-        SQLiteCommand command;
+        private SQLiteConnection connection;
+        private SQLiteCommand command;
         public Database(string path)
         {
             try
@@ -20,64 +21,89 @@ namespace Server
                 throw new Exception("Impossibile connettersi al database");
             }
         }
-        public void CreaTabella()
+
+        public void CreaTabella(string nomeTabella, string[] colonne)
         {
-            string sql = "CREATE TABLE Utenti (Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, " +
-                         "Username TEXT NOT NULL UNIQUE, " +
-                         "LivelliCompletati INTEGER NOT NULL);";
+            var columnDefinitions = string.Join(",", colonne);
+            var sql = $"CREATE TABLE IF NOT EXISTS {nomeTabella} ({columnDefinitions})";
             SQLiteCommand command = new SQLiteCommand(sql, connection);
             command.ExecuteNonQuery();
         }
 
-        public bool RicercaAdmin(string Username,string Password)
+        public bool Esiste(string nomeTabella, string nomeColonna, object value)
         {
-            command = new SQLiteCommand("SELECT * FROM Admins WHERE Username = '" + Username + "' AND Password = '" + Password + "';",connection);
-            SQLiteDataReader reader = command.ExecuteReader();
-            return reader.HasRows;
+            var sql = $"SELECT COUNT(*) FROM {nomeTabella} WHERE {nomeColonna} = @valore";
+            command.CommandText = sql;
+            command.Parameters.AddWithValue("@value", value);
+            var count = Convert.ToInt32(command.ExecuteScalar());
+            return count > 0;
         }
-        public void AggiungiUtente(string Username,int nLivelli)
-        {
-            if (!RicercaUtente(Username))
-            {
-            command = new SQLiteCommand($"INSERT INTO Utenti (Username, LivelliCompletati) VALUES (\"" + Username +"\", "+nLivelli+");\r\n",connection);
-            command.ExecuteNonQuery();
 
-            }
-        }
-        public void AggiornaUtente(string Username,int nLivelli)
+        public void AggiungiRiga(string nomeTabella, object[] valori)
         {
-            command = new SQLiteCommand($"UPDATE Utenti SET LivelliCompletati = {nLivelli} WHERE Username = \"{Username}\";\r\n",connection);
+            var valuePlaceholders = string.Join(",", new string[valori.Length]);
+            var sql = $"INSERT INTO {nomeTabella} VALUES ({valuePlaceholders})";
+            command.CommandText = sql;
+            for (int i = 0; i < valori.Length; i++)
+            {
+                command.Parameters.AddWithValue($"@p{i}", valori[i]);
+            }
             command.ExecuteNonQuery();
         }
-        public bool RicercaUtente(string Username)
+        public void AggiornaElemento(string nomeTabella, string nomeColonna, object columnValue, string condizioneNomeColonna, object valoreConfronto)
         {
-            command = new SQLiteCommand("SELECT * FROM Utenti WHERE Username = '" + Username + "';",connection);
-            SQLiteDataReader reader = command.ExecuteReader();
-            //while (reader.Read())
-            //{
-            //    return reader["LivelliCompletati"];
-            //}
-            return reader.HasRows;
+
+            var sql = $"UPDATE {nomeTabella} SET {nomeColonna} = @columnValue WHERE {condizioneNomeColonna} = @condition";
+            command.CommandText = sql;
+            command.Parameters.AddWithValue("@columnValue", columnValue);
+            command.Parameters.AddWithValue("@condition", valoreConfronto);
+            command.ExecuteNonQuery();
         }
-        public int RicercaLivelliCompletati(string Username)
+        public void DeleteRow(string nomeTabella, string condizioneNomeColonna, object valoreConfronto)
         {
-            command = new SQLiteCommand("SELECT LivelliCompletati FROM Utenti WHERE Username ='" + Username + "';",connection);
-            SQLiteDataReader reader = command.ExecuteReader();
-            reader.Read();
-            return reader.GetInt32(0);
+            var sql = $"DELETE FROM {nomeTabella} WHERE {condizioneNomeColonna} = @condition";
+            command.CommandText = sql;
+            command.Parameters.AddWithValue("@condition", valoreConfronto);
+            command.ExecuteNonQuery();
         }
+        public DataRow OttieniRiga(string nomeTabella, string condizioneNomeColonna, object valoreConfronto)
+        {
+            var dataTable = new DataTable();
+            var sql = $"SELECT * FROM {nomeTabella} WHERE {condizioneNomeColonna} = @condition";
+            command.CommandText = sql;
+            command.Parameters.AddWithValue("@condition", valoreConfronto);
+            using (var reader = command.ExecuteReader())
+            {
+                dataTable.Load(reader);
+            }
+            return dataTable.Rows.Count > 0 ? dataTable.Rows[0] : null;
+        }
+
+        public DataTable OttieniRighe(string nomeTabella)
+        {
+            var dataTable = new DataTable();
+            var sql = $"SELECT * FROM {nomeTabella}";
+            command.CommandText = sql;
+            using (var reader = command.ExecuteReader())
+            {
+                dataTable.Load(reader);
+            }
+            return dataTable;
+        }
+        public DataTable EseguiQuery(string sql)
+        {
+            var dataTable = new DataTable();
+            command.CommandText = sql;
+            using (var reader = command.ExecuteReader())
+            {
+                dataTable.Load(reader);
+            }
+            return dataTable;
+        }
+
         ~Database()
         {
             connection.Close();
         }
     }
 }
-
-// Crea una nuova tabella 
-//string sql = "CREATE TABLE Admins (Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, " +
-//             "Username TEXT NOT NULL UNIQUE, " +
-//             "Password TEXT NOT NULL);";
-//SQLiteCommand command = new SQLiteCommand(sql, connection);
-//command.ExecuteNonQuery();
-
-

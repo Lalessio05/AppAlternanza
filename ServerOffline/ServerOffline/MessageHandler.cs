@@ -57,7 +57,6 @@ namespace Server
                         break;
                     case "Giù":
                         coordinata = (0, 10);
-
                         break;
                     case "Destra":
                         coordinata = (10, 0);
@@ -85,10 +84,17 @@ namespace Server
 
         public static bool VerificaCodice(Messaggio messaggioRicevuto, string chiavePrivataCriptazione)
         {
-            if (chiavePrecendente == chiavePrivataCriptazione)
+            if (chiavePrecendente == messaggioRicevuto.codice)
                 return true;
-            chiavePrecendente = chiavePrivataCriptazione;     
-            return (DateTime.Now - DateTime.Parse(Crypt.RSADecrypt(chiavePrivataCriptazione, messaggioRicevuto.codice))).TotalDays < 1;
+            if (messaggioRicevuto.codice == null || messaggioRicevuto.codice == string.Empty)
+                return false;
+            if ((DateTime.Now - DateTime.Parse(Crypt.RSADecrypt(chiavePrivataCriptazione, messaggioRicevuto.codice))).TotalDays < 1)
+            { 
+                chiavePrecendente = messaggioRicevuto.codice;
+                return true;
+            }
+            return false;
+            
         }
     }
 }

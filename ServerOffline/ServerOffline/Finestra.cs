@@ -141,7 +141,6 @@ namespace ServerOffline
 
             if (labirinto[x, y])
                 return false;
-            Console.WriteLine(x + " " + y);
             spaziVisitati[x, y] = true;
             if (
                 Controllo(x + 1, y) ||

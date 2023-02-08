@@ -1,4 +1,5 @@
-import React, {useEffect, useState, useRef} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useState, useRef, useEffect} from 'react';
 import {View, StyleSheet, Alert, Text, TouchableOpacity} from 'react-native';
 import Socket from '../classi/Socket';
 
@@ -24,12 +25,20 @@ export default function MainScreen({navigation, route}: any) {
       });
     }, 200);
   }
-  useEffect(() => {
-    setSocket(new Socket('ws://192.168.1.239:4500'));
-    setChiave(route.params?.chiave);
-    return ()=>socket?.Disconnetti();
-  }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setSocket(new Socket('ws://192.168.1.39:4500'));
+      setChiave(route.params?.chiave);
+      return () => {
+        socket?.Disconnetti();
+        setSocket(null);
+      };
+    }, []),
+  );
+  useEffect(() => {
+    console.log(chiave);
+  }, [chiave]);
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -40,7 +49,7 @@ export default function MainScreen({navigation, route}: any) {
           if (intervalId.current !== null) clearInterval(intervalId.current);
         }}
         onPress={() => {
-          let risposto: any;
+          let risposto: boolean;
           socket?.Manda('OnMove', {codice: chiave, movimento: 'Sinistra'});
           setTimeout(() => {
             if (!risposto) {
@@ -74,7 +83,7 @@ export default function MainScreen({navigation, route}: any) {
                 return;
               }
             }, 5000);
-  
+
             socket?.Ricevi('OnMoveResponse', risposta => {
               risposto = true;
               if (!risposta) Alert.alert('Chiave scaduta');
@@ -98,13 +107,12 @@ export default function MainScreen({navigation, route}: any) {
                 return;
               }
             }, 5000);
-  
+
             socket?.Ricevi('OnMoveResponse', risposta => {
               risposto = true;
               if (!risposta) Alert.alert('Chiave scaduta');
             });
-          }}
-          >
+          }}>
           <Text style={{color: 'red', fontSize: 30}}> Giù</Text>
         </TouchableOpacity>
       </View>
@@ -149,7 +157,3 @@ const styles = StyleSheet.create({
     height: '50%',
   },
 });
-
-//Forse è meglio fare una classe con la funzione che controlla che il server risponda e abbia mandato risposta positiva
-
-//Verificare se vanno più pulsanti assieme

@@ -19,7 +19,7 @@ namespace Server
             return "An user connected to your channel";
         }
 
-        public void Start(dynamic db = null /*Funziona con la mia classe database*/, string chiavePubblicaCriptazione = null, string chiavePrivataCriptazione = null, Finestra finestra = null)
+        public void Start(IDataStorage db, string chiavePubblicaCriptazione = null, string chiavePrivataCriptazione = null, Finestra finestra = null)
         {
             //Riceve un interfaccia di dataStorage che ha una serie di metodi base, che la classe database estende
             //In questo modo non dipende più dal db ma dipende dall'interfaccia. Se ne frega di come sono implementati i metodi, finché fanno quello che vuoi
@@ -47,7 +47,7 @@ namespace Server
                             break;
                         case "OnAutoLogin":
                             s.Send(MessageHandler.HandleOnAutoLogin(messaggioRicevuto, chiavePrivataCriptazione));
-                            //s.Send(MessageHandler.Test());
+
                             break;
                         case "OnMove":
                             s.Send(MessageHandler.HandleMove(messaggioRicevuto, chiavePrivataCriptazione, finestra));

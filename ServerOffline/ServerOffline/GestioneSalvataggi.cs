@@ -1,22 +1,27 @@
 ﻿using Server;
+using System;
+using System.Runtime.Serialization;
+
 namespace ServerOffline
 {
     internal class GestioneSalvataggi
     {
-        public static void Salva(string username, Database db)
+        public static void Salva(string username, IDataStorage db)
         {
-            if (!db.RicercaUtente(username))
+            if (!db.Esiste("Utenti", username, "Username"))
             {
-                db.AggiungiUtente(username, Finestra.labirintiCompletati);
+
+                db.AggiungiRiga("Utenti", new object[] { username, Finestra.labirintiCompletati });
             }
             else
-                db.AggiornaUtente(username, Finestra.labirintiCompletati);
+                db.AggiornaElemento("Utenti", "LabirintiCompletati", Finestra.labirintiCompletati, "Username", username); ;
         }
-        public static void Carica(Database db, string username)
+        public static void Carica(IDataStorage db, string username)
         {
-            if (db.RicercaUtente(username))
+            if (db.Esiste("Utenti", "Username",username ))
             {
-                Finestra.labirintiCompletati = db.RicercaLivelliCompletati(username);
+                var obj = db.OttieniRiga("Utenti", "Username", username);
+                Finestra.labirintiCompletati = Convert.ToInt32(obj["LabirintiCompletati"]);
             }
         }
     }

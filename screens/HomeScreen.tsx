@@ -3,10 +3,9 @@ import Socket from '../classi/Socket';
 import {Alert, Button, Text, View} from 'react-native';
 import SalvataggioDati from '../classi/SalvataggioDati';
 import {useFocusEffect} from '@react-navigation/native';
-import { ScreenStackHeaderCenterView } from 'react-native-screens';
 
 export default function HomeScreen({navigation, route}: any) {
-  const [chiave, setChiave] = useState(null);
+  const [chiave, setChiave] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
   const [lastTockenDate, setLastTokenDate] = useState<string>('');
   async function fetchData() {
@@ -14,34 +13,43 @@ export default function HomeScreen({navigation, route}: any) {
     setLastTokenDate(await SalvataggioDati.getData('@Date'));
   }
 
-
   useFocusEffect(
     React.useCallback(() => {
-      if (chiave === null) fetchData();
-      if (socket === null) setSocket(new Socket('ws://192.168.1.239:4500'));
-      console.log(socket);
+      setSocket(new Socket('ws://192.168.1.39:4500'));
       return () => {
         socket?.Disconnetti();
-        console.log('Arrivederci');
         setSocket(null);
       };
     }, []),
   );
-  
+
   useFocusEffect(
     React.useCallback(() => {
       if (route.params?.chiave !== null) {
         setChiave(route.params?.chiave);
-        console.log(route.params?.chiave)
-        console.log('Key give by the last screen' + chiave);
         setLastTokenDate(route.params?.data);
-        console.log('La data che mi sono assegnato è ' + lastTockenDate);
       }
-      
     }, [route.params?.chiave, route.params?.data]),
   );
 
-  useEffect(() => {console.log('Le cose sono cambiate');}, [chiave, lastTockenDate, socket]);
+  useEffect(() => {}, [socket]);
+
+  useEffect(() => {
+    if (chiave !== '' && chiave !== null)
+      SalvataggioDati.storeData('@Key', chiave);
+  }, [chiave]);
+
+  useEffect(() => {
+    if (lastTockenDate !== '' && lastTockenDate !== null)
+      SalvataggioDati.storeData('@Date', lastTockenDate);
+  }, [lastTockenDate]);
+
+  useEffect(() => {
+    if (chiave === '') {
+      fetchData();
+    }
+  }, []);
+  useEffect(() => {}, [socket]);
 
   return (
     <View>
@@ -55,16 +63,13 @@ export default function HomeScreen({navigation, route}: any) {
         title="Credo di avere già un token"
         onPress={() => {
           socket?.Manda('OnStart', {username: 'Gianni'});
-
           socket?.Manda('OnAutoLogin', {codice: chiave});
           let risposto = false;
-
           setTimeout(() => {
             if (!risposto) {
               Alert.alert('Il server non risponde');
             }
           }, 5000);
-
           socket?.Ricevi('OnAutoLoginResponse', risposta => {
             risposto = true;
             if (risposta) {
@@ -77,7 +82,8 @@ export default function HomeScreen({navigation, route}: any) {
           });
         }}
       />
-      <Text>Ultimo token ricevuto: {route.params?.data}</Text>
+      <Button title="Prova" onPress={() => console.log(chiave)} />
+      <Text>Ultimo token ricevuto: {lastTockenDate}</Text>
     </View>
   );
 }

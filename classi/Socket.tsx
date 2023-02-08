@@ -3,17 +3,16 @@ export default class Socket {
   constructor(indirizzo: string) {
     this.socket = new WebSocket(indirizzo);
     this.socket.onopen = () => {
-      // console.log('Mi sono connesso');
+      console.log('Mi sono connesso');
     };
   }
 
   Disconnetti() {
-    console.log("Mi sono disconnesso");
+    console.log('Mi sono disconnesso');
     this.socket.close();
   }
 
   Manda(nomeEvento: string, messaggio: any) {
-    
     try {
       this.socket.send(
         JSON.stringify({
@@ -33,7 +32,8 @@ export default class Socket {
     this.socket.onmessage = e => {
       try {
         let risposta = JSON.parse(e.data);
-        if (risposta.nomeEvento === nomeEvento ) {  //Forse dovrei fare una lista di eventi e controllare se l'evento è presente nella lista 
+        if (risposta.nomeEvento === nomeEvento) {
+          //Forse dovrei fare una lista di eventi e controllare se l'evento è presente nella lista
           callback(risposta.messaggio);
         }
       } catch (e) {
@@ -41,5 +41,4 @@ export default class Socket {
       }
     };
   }
-
 }

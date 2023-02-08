@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {View, Button, StyleSheet, TextInput, Text, Alert} from 'react-native';
 import Socket from '../classi/Socket';
 
@@ -6,10 +7,15 @@ function LoginScreen({navigation}: any) {
   const [username, SetUsername] = useState('');
   const [password, SetPassword] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
-  useEffect(() => {
-    if (socket === null) setSocket(new Socket('ws://192.168.1.239:3000'));
-  }, []);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      setSocket(new Socket('ws://192.168.1.39:3000'));
+      return () => {
+        socket?.Disconnetti();
+        setSocket(null);
+      };
+    }, []),
+  );
   return (
     <View style={styles.screen}>
       <TextInput

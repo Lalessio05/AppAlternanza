@@ -13,16 +13,16 @@ namespace ServerOffline
 
             Database db = new Database("mydb.db");
 
+            db.Esiste("Admins", "prova", "passBrytta", "Gianni");
 
+            //string chiavePrivataCriptazione = System.IO.File.ReadAllText(@"C:\Users\catri\Documents\py\AppAlternanza\chiavi\privata.txt");
+            //SocketServer socketServer = new SocketServer("ws://0.0.0.0:4500");
 
-            string chiavePrivataCriptazione = System.IO.File.ReadAllText(@"C:\Users\Andrea\Desktop\d\privata.txt");
-            SocketServer socketServer = new SocketServer("ws://0.0.0.0:4500");
+            //Finestra form = new Finestra(width: windowWidth, height: windowHeight, gravità: gravità, nMuri: nMuri);
 
-            Finestra form = new Finestra(width: windowWidth, height: windowHeight, gravità: gravità, nMuri: nMuri);
-
-            socketServer.Start(db: db, chiavePrivataCriptazione: chiavePrivataCriptazione, finestra: form);
-            form.ShowDialog();
-            Console.Read();
+            //socketServer.Start(db: db, chiavePrivataCriptazione: chiavePrivataCriptazione, finestra: form);
+            //form.ShowDialog();
+            //Console.Read();
 
 
         }
